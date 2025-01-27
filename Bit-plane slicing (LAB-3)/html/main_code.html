@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>main_code</title>
+<meta name="generator" content="MATLAB 24.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2025-01-27">
+<meta name="DC.source" content="main_code.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<pre class="codeinput">
+<span class="comment">%%%%% This code has been developed by Dhanhanjay Pachori (BT22ECE024)</span>
+<span class="comment">%%%%% under the coursework Digital Image Processing</span>
+<span class="comment">%%%%% under the supervision of Dr. Tapan Kumar Jain</span>
+
+<span class="comment">% Clear variables, close figures, and reset the command window</span>
+clear <span class="string">all</span>;
+close <span class="string">all</span>;
+clc;
+<span class="comment">% Define the image path and load the grayscale image</span>
+imagePath = <span class="string">'cameraman_image.png'</span>;
+grayImage = imread(imagePath);
+<span class="comment">% Convert to grayscale if the image is RGB</span>
+<span class="keyword">if</span> size(grayImage, 3) == 3
+    grayImage = rgb2gray(grayImage);
+<span class="keyword">end</span>
+<span class="comment">% Get the size of the grayscale image</span>
+[rows, cols] = size(grayImage);
+<span class="comment">% Create a folder to store bit-plane outputs</span>
+outputFolder = <span class="string">'BitPlaneOutputs'</span>;
+<span class="keyword">if</span> ~exist(outputFolder, <span class="string">'dir'</span>)
+    mkdir(outputFolder);
+<span class="keyword">end</span>
+<span class="comment">% Display the original grayscale image</span>
+figure;
+subplot(3, 3, 1);
+imshow(grayImage, []);
+title(<span class="string">'Original Grayscale Image'</span>);
+imwrite(grayImage, fullfile(outputFolder, <span class="string">'Original_Grayscale_Image.png'</span>));
+<span class="comment">% Perform bit-plane slicing and save results</span>
+<span class="keyword">for</span> bp = 0:7
+    bitPlaneImage = bitget(grayImage, bp + 1);
+    outputFileName = fullfile(outputFolder, sprintf(<span class="string">'BitPlane_%d.png'</span>, bp));
+    imwrite(logical(bitPlaneImage), outputFileName);
+    subplot(3, 3, bp + 2);
+    imshow(logical(bitPlaneImage));
+    title([<span class="string">'Bit Plane '</span>, num2str(bp)]);
+<span class="keyword">end</span>
+<span class="comment">% Save the figure with all bit-plane slicing results</span>
+set(gcf, <span class="string">'Position'</span>, get(0, <span class="string">'Screensize'</span>));
+saveas(gcf, fullfile(outputFolder, <span class="string">'BitPlane_Slicing_Results.png'</span>));
+<span class="comment">% Display completion message</span>
+disp([<span class="string">'Bit-plane slicing completed. Output saved in folder: '</span>, outputFolder]);
+</pre>
+<pre class="codeoutput">Bit-plane slicing completed. Output saved in folder: BitPlaneOutputs
+</pre>
+<img vspace="5" hspace="5" src="main_code_01.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%%%%% This code has been developed by Dhanhanjay Pachori (BT22ECE024) 
+%%%%% under the coursework Digital Image Processing 
+%%%%% under the supervision of Dr. Tapan Kumar Jain
+
+% Clear variables, close figures, and reset the command window
+clear all;
+close all;
+clc;
+% Define the image path and load the grayscale image
+imagePath = 'cameraman_image.png'; 
+grayImage = imread(imagePath);
+% Convert to grayscale if the image is RGB
+if size(grayImage, 3) == 3
+    grayImage = rgb2gray(grayImage);
+end
+% Get the size of the grayscale image
+[rows, cols] = size(grayImage);
+% Create a folder to store bit-plane outputs
+outputFolder = 'BitPlaneOutputs';
+if ~exist(outputFolder, 'dir')
+    mkdir(outputFolder);
+end
+% Display the original grayscale image
+figure;
+subplot(3, 3, 1);
+imshow(grayImage, []);
+title('Original Grayscale Image');
+imwrite(grayImage, fullfile(outputFolder, 'Original_Grayscale_Image.png'));
+% Perform bit-plane slicing and save results
+for bp = 0:7
+    bitPlaneImage = bitget(grayImage, bp + 1);
+    outputFileName = fullfile(outputFolder, sprintf('BitPlane_%d.png', bp));
+    imwrite(logical(bitPlaneImage), outputFileName);
+    subplot(3, 3, bp + 2); 
+    imshow(logical(bitPlaneImage)); 
+    title(['Bit Plane ', num2str(bp)]);
+end
+% Save the figure with all bit-plane slicing results
+set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, fullfile(outputFolder, 'BitPlane_Slicing_Results.png'));
+% Display completion message
+disp(['Bit-plane slicing completed. Output saved in folder: ', outputFolder]);
+##### SOURCE END #####
+-->
+</body>
+</html>
